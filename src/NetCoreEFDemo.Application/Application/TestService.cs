@@ -12,18 +12,15 @@ namespace NetCoreEFDemo.Application.Application
     public class TestService : ITestService
     {
         IRepository<Test> _testRepository { get; set; }
-        IUnitOfWork _unitOfWork { get; set; }
-        public TestService(IRepository<Test> testRepository, IUnitOfWork _unitOfWork)
+        public TestService(IRepository<Test> testRepository)
         {
             this._testRepository = testRepository;
-            this._unitOfWork = _unitOfWork;
         }
 
         //[Transactional]
         public async Task<TestDto> Get(string id)
         {
             var test = await _testRepository.AsQueryable().Where(p => p.ID == id).SingleAsync();
-            var mttest = _unitOfWork.DbContext.Database.SqlQuery<Test>("select * from Test");
             return test.MapTo<TestDto>();
         }
 
